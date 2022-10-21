@@ -1,16 +1,19 @@
 //**React imports */
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 //**Bootstrap imports */
 import { Button, Modal, Spinner, Alert } from "react-bootstrap";
 //**Api config imports */
 import ApiLinks from "./../../../Axios/ApiLinks";
 import axios from "./../../../Axios/Axios";
+import { Routes } from "../../../routes";
 function DeleteSheetModal({
   showDeleteSheetModal,
   setShowDeleteSheetModal,
   selectedSheet,
 }) {
   //-----------------------------------------------------------
+  const navigate = useHistory();
   const [spinningButton, setSpinningButton] = useState(false);
   const [backErrors, setBackErrors] = useState({}); //**Back errors */
   //-----------------------------------------------------------
@@ -33,15 +36,15 @@ function DeleteSheetModal({
         }
         //**Invalid token */
         if (err?.response?.status === 401) {
-          //Redirect to login oage
+          navigate.push(Routes.Signin.path);
         }
         //**404 */
         if (err?.response?.status === 404) {
-          //redirect to not found page
+          navigate.push(Routes.Signin.NotFound);
         }
         //**server error */
         if (err?.response?.status === 500) {
-          //redirect to server error page
+          navigate.push(Routes.Signin.ServerError);
         }
       });
     setSpinningButton(false);

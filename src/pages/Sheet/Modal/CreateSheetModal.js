@@ -1,5 +1,6 @@
 //**React imports */
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 //**Bootstrap imports */
 import {
   Card,
@@ -20,9 +21,11 @@ import axios from "../../../Axios/Axios";
 import ApiLinks from "./../../../Axios/ApiLinks";
 //**Assets import */
 import Profile3 from "../../../assets/img/team/profile-picture-3.jpg";
+import { Routes } from "../../../routes";
 //---------------------------------------------------------------------------
 function CreateSheetModal({ showCreateSheetModal, setShowCreateSheetModal }) {
   //--------------------------------------------------------------
+  const navigate = useHistory();
   const [spinningButton, setSpinningButton] = useState(false);
   const [inputErrors, setInputErrors] = useState({}); //**Front errors */
   const [backErrors, setBackErrors] = useState({}); //**Back errors */
@@ -72,13 +75,13 @@ function CreateSheetModal({ showCreateSheetModal, setShowCreateSheetModal }) {
               failedToCreate: "une erreur s'est produite",
             }));
           }
-          //**Token is invalide */
+          //**Invalid token */
           if (err?.response?.status === 401) {
-            //redirect user to login page
+            navigate.push(Routes.Signin.path);
           }
-          //**Server returning 404 for any reason */
+          //**404 */
           if (err?.response?.status === 404) {
-            //redirect to not found page
+            navigate.push(Routes.Signin.NotFound);
           }
           //**Some entite is missing */
           if (err?.response?.status === 406) {
@@ -95,9 +98,9 @@ function CreateSheetModal({ showCreateSheetModal, setShowCreateSheetModal }) {
               alreadyExist: "Un nom similaire existe déjà",
             }));
           }
-          //**Server error */
+          //**server error */
           if (err?.response?.status === 500) {
-            //redirect to server error page
+            navigate.push(Routes.Signin.ServerError);
           }
         });
     }

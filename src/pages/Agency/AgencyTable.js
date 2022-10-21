@@ -1,6 +1,6 @@
 //**React imports */
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 //**Bootsrap imports */
 import {
   Col,
@@ -10,10 +10,7 @@ import {
   Image,
   Button,
   Table,
-  Dropdown,
-  ProgressBar,
   Pagination,
-  ButtonGroup,
   InputGroup,
   Form,
   OverlayTrigger,
@@ -22,20 +19,12 @@ import {
 //**Font awesome imports */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faAngleDown,
-  faAngleUp,
-  faArrowDown,
-  faArrowUp,
   faEdit,
-  faEllipsisH,
-  faExternalLinkAlt,
   faEye,
   faTrashAlt,
   faSearch,
-  faCog,
   faCheck,
   faPlus,
-  faUser,
   faLock,
   faBan,
 } from "@fortawesome/free-solid-svg-icons";
@@ -54,7 +43,7 @@ import BlockAgency from "./Modal/BlockAgency";
 import ResetAgencyPassword from "./Modal/ResetAgencyPassword";
 import ActivateAgencyModal from "./Modal/ActivateAgencyModal";
 function AgencyTable() {
-  const totalTransactions = transactions.length;
+  const navigate = useHistory();
   //--------------------------------------------------------------
   const [agencies, setAgencies] = useState([]);
   const [rowPerPage, setRowPerPage] = useState(1);
@@ -69,17 +58,17 @@ function AgencyTable() {
         }
       })
       .catch((err) => {
-        //**Token is invalide */
+        //**Invalid token */
         if (err?.response?.status === 401) {
-          //redirect user to login page
+          navigate.push(Routes.Signin.path);
         }
-        //**Server returning 404 for any reason */
+        //**404 */
         if (err?.response?.status === 404) {
-          //redirect to not found page
+          navigate.push(Routes.Signin.NotFound);
         }
-        //**Server error */
+        //**server error */
         if (err?.response?.status === 500) {
-          //redirect to server error page
+          navigate.push(Routes.Signin.ServerError);
         }
       });
   };

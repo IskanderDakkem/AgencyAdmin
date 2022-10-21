@@ -1,28 +1,17 @@
+//**React imports */
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  Form,
-  Button,
-  Modal,
-  InputGroup,
-  FormCheck,
-  Col,
-  Image,
-  Spinner,
-} from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleLeft,
-  faEnvelope,
-  faUnlockAlt,
-  faPaperclip,
-} from "@fortawesome/free-solid-svg-icons";
+import { useHistory } from "react-router-dom";
+//**Bootstrap imports */
+import { Form, Button, Modal, InputGroup, Col, Image } from "react-bootstrap";
+//**Assets import */
 import Profile3 from "../../../assets/img/team/profile-picture-3.jpg";
+//**Api config */
 import axios from "./../../../Axios/Axios";
 import ApiLinks from "./../../../Axios/ApiLinks";
+import { Routes } from "./../../../routes";
 function ViewBrand({ showViewBrand, setShowViewBrand, selectedBrand }) {
   //----------------------------------------------------------------
-  const [spinningButton, setSpinningButton] = useState(false);
+  const navigate = useHistory();
   const [backErrors, setBackErrors] = useState({}); //**Back errors */
   //----------------------------------------------------------------
   const [brand, setBrand] = useState({});
@@ -42,17 +31,17 @@ function ViewBrand({ showViewBrand, setShowViewBrand, selectedBrand }) {
             failedToCreate: "une erreur s'est produite",
           }));
         }
-        //**Token is invalide */
+        //**Invalid token */
         if (err?.response?.status === 401) {
-          //redirect user to login page
+          navigate.push(Routes.Signin.path);
         }
-        //**Server returning 404 for any reason */
+        //**404 */
         if (err?.response?.status === 404) {
-          //redirect to not found page
+          navigate.push(Routes.Signin.NotFound);
         }
-        //**Server error */
+        //**server error */
         if (err?.response?.status === 500) {
-          //redirect to server error page
+          navigate.push(Routes.Signin.ServerError);
         }
       });
   };

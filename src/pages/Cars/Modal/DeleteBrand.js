@@ -1,27 +1,18 @@
+//**React imports */
 import React, { useState } from "react";
-import {
-  Card,
-  Form,
-  Button,
-  Modal,
-  InputGroup,
-  FormCheck,
-  Col,
-  Image,
-  Spinner,
-} from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleLeft,
-  faEnvelope,
-  faUnlockAlt,
-  faPaperclip,
-} from "@fortawesome/free-solid-svg-icons";
+import { useHistory } from "react-router-dom";
+//**Bootstrap imports */
+import { Button, Modal, Spinner } from "react-bootstrap";
+//**Front awesome */
+//**Assets import */
 import Profile3 from "../../../assets/img/team/profile-picture-3.jpg";
+//**Api config */
 import ApiLinks from "./../../../Axios/ApiLinks";
 import axios from "./../../../Axios/Axios";
+import { Routes } from "../../../routes";
 function DeleteBrand({ showDeleteBrand, setShowDeleteBrand, selectedBrand }) {
   //-----------------------------------------------------------
+  const navigate = useHistory();
   const [spinningButton, setSpinningButton] = useState(false);
   const [backErrors, setBackErrors] = useState({}); //**Back errors */
   //-----------------------------------------------------------
@@ -44,11 +35,11 @@ function DeleteBrand({ showDeleteBrand, setShowDeleteBrand, selectedBrand }) {
         }
         //**Invalid token */
         if (err?.response?.status === 401) {
-          //Redirect to login oage
+          navigate.push(Routes.Signin.path);
         }
         //**404 */
         if (err?.response?.status === 404) {
-          //redirect to not found page
+          navigate.push(Routes.Signin.NotFound);
         }
         //**Cant be deleted */
         if (err?.response?.status === 409) {
@@ -59,7 +50,7 @@ function DeleteBrand({ showDeleteBrand, setShowDeleteBrand, selectedBrand }) {
         }
         //**server error */
         if (err?.response?.status === 500) {
-          //redirect to server error page
+          navigate.push(Routes.Signin.ServerError);
         }
       });
     setSpinningButton(false);

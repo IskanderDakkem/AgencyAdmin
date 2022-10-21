@@ -1,5 +1,6 @@
 //**React imports */
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 //**Bootstrap imports */
 import { Button, Modal, Spinner, Alert } from "react-bootstrap";
 //**Api config */
@@ -11,7 +12,8 @@ function ActivateAgencyModal({
   setShowActivateAgencyModal,
   selectedAgency,
 }) {
-  //-----------------------------------------------------------
+  //----------------------------------------------------------0-
+  const navigate = useHistory();
   const [spinningButton, setSpinningButton] = useState(false);
   const [backErrors, setBackErrors] = useState({}); //**Back errors */
   //-----------------------------------------------------------

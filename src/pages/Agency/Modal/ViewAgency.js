@@ -1,5 +1,6 @@
 //**React imports */
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 //**Bootsrap imports */
 import {
   Card,
@@ -16,6 +17,7 @@ import Profile3 from "../../../assets/img/team/profile-picture-3.jpg";
 //**Api config imports */
 import axios from "./../../../Axios/Axios";
 import ApiLinks from "./../../../Axios/ApiLinks";
+import { Routes } from "../../../routes";
 //----------------------------------------------------------------
 function ViewAgency({
   showViewAgencyModal,
@@ -23,6 +25,7 @@ function ViewAgency({
   selectedAgency,
 }) {
   //----------------------------------------------------------------
+  const navigate = useHistory();
   const [spinningButton, setSpinningButton] = useState(false);
   const [backErrors, setBackErrors] = useState({}); //**Back errors */
   //----------------------------------------------------------------
@@ -45,17 +48,17 @@ function ViewAgency({
             failedToCreate: "une erreur s'est produite",
           }));
         }
-        //**Token is invalide */
+        //**Invalid token */
         if (err?.response?.status === 401) {
-          //redirect user to login page
+          navigate.push(Routes.Signin.path);
         }
-        //**Server returning 404 for any reason */
+        //**404 */
         if (err?.response?.status === 404) {
-          //redirect to not found page
+          navigate.push(Routes.Signin.NotFound);
         }
-        //**Server error */
+        //**server error */
         if (err?.response?.status === 500) {
-          //redirect to server error page
+          navigate.push(Routes.Signin.ServerError);
         }
       });
     setSpinningButton(false);

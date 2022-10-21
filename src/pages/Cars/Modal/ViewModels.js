@@ -1,5 +1,6 @@
 //** React imports */
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 //**Bootsrap imports */
 import { Button, Modal, Table, OverlayTrigger, Tooltip } from "react-bootstrap";
 //**Font awesome imports */
@@ -8,10 +9,11 @@ import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 //**Api config imports */
 import axios from "./../../../Axios/Axios";
 import ApiLinks from "./../../../Axios/ApiLinks";
+import { Routes } from "./../../../routes";
 function ViewModels({ showViewCar, setShowViewCar, selectedBrand }) {
   //-----------------------------------------------------------------
   const initialeState = [];
-  const [backErrors, setBackErrors] = useState({});
+  const navigate = useHistory();
   //-----------------------------------------------------------------
   const [models, setModels] = useState(initialeState);
   const getModels = async () => {
@@ -24,17 +26,17 @@ function ViewModels({ showViewCar, setShowViewCar, selectedBrand }) {
         }
       })
       .catch((err) => {
-        //**Token is invalide */
+        //**Invalid token */
         if (err?.response?.status === 401) {
-          //redirect user to login page
+          navigate.push(Routes.Signin.path);
         }
-        //**Server returning 404 for any reason */
+        //**404 */
         if (err?.response?.status === 404) {
-          //redirect to not found page
+          navigate.push(Routes.Signin.NotFound);
         }
-        //**Server error */
+        //**server error */
         if (err?.response?.status === 500) {
-          //redirect to server error page
+          navigate.push(Routes.Signin.ServerError);
         }
       });
   };
@@ -61,6 +63,18 @@ function ViewModels({ showViewCar, setShowViewCar, selectedBrand }) {
         })
         .catch((err) => {
           if (err?.response?.status === 400) {
+          }
+          //**Invalid token */
+          if (err?.response?.status === 401) {
+            navigate.push(Routes.Signin.path);
+          }
+          //**404 */
+          if (err?.response?.status === 404) {
+            navigate.push(Routes.Signin.NotFound);
+          }
+          //**server error */
+          if (err?.response?.status === 500) {
+            navigate.push(Routes.Signin.ServerError);
           }
         });
     }

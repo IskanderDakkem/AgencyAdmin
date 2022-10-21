@@ -1,5 +1,6 @@
 //**React imports */
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 //**React imports */
 import {
   Form,
@@ -13,6 +14,7 @@ import {
 //**Api config imports */
 import axios from "./../../../Axios/Axios";
 import ApiLinks from "./../../../Axios/ApiLinks";
+import { Routes } from "../../../routes";
 //----------------------------------------------------------------
 function CreateBrandModel({
   showCreateModel,
@@ -20,6 +22,7 @@ function CreateBrandModel({
   selectedBrand,
 }) {
   //----------------------------------------------------------------
+  const navigate = useHistory();
   const [spinningButton, setSpinningButton] = useState(false);
   const [inputErrors, setInputErrors] = useState("");
   const [backErrors, setBackErrors] = useState({}); //**Back errors */
@@ -54,13 +57,13 @@ function CreateBrandModel({
               failedToCreate: "une erreur s'est produite",
             }));
           }
-          //**Token is invalide */
+          //**Invalid token */
           if (err?.response?.status === 401) {
-            //redirect user to login page
+            navigate.push(Routes.Signin.path);
           }
-          //**Server returning 404 for any reason */
+          //**404 */
           if (err?.response?.status === 404) {
-            //redirect to not found page
+            navigate.push(Routes.Signin.NotFound);
           }
           //**Some entite is missing */
           if (err?.response?.status === 406) {
@@ -77,9 +80,9 @@ function CreateBrandModel({
               alreadyExist: "Un nom similaire existe déjà",
             }));
           }
-          //**Server error */
+          //**server error */
           if (err?.response?.status === 500) {
-            //redirect to server error page
+            navigate.push(Routes.Signin.ServerError);
           }
         });
     }

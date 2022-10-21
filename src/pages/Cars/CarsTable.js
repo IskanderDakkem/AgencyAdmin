@@ -1,7 +1,7 @@
 //**React imports */
 import React, { useEffect, useState } from "react";
 import { Routes } from "../../routes";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 //**Bootsrap imports */
 import {
   Col,
@@ -38,7 +38,7 @@ import CreateBrandModel from "./Modal/CreateBrandModel"; //Create a brand model
 //-----------------------------------------------------------
 function CarsTable() {
   //-----------------------------------------------------------
-
+  const navigate = useHistory();
   const [brands, setBrands] = useState([]);
   const [rowPerPage, setRowPerPage] = useState(1);
   const [limitPerPage, setLimitPerPage] = useState(30);
@@ -52,17 +52,17 @@ function CarsTable() {
         }
       })
       .catch((err) => {
-        //**Token is invalide */
+        //**Invalid token */
         if (err?.response?.status === 401) {
-          //redirect user to login page
+          navigate.push(Routes.Signin.path);
         }
-        //**Server returning 404 for any reason */
+        //**404 */
         if (err?.response?.status === 404) {
-          //redirect to not found page
+          navigate.push(Routes.Signin.NotFound);
         }
-        //**Server error */
+        //**server error */
         if (err?.response?.status === 500) {
-          //redirect to server error page
+          navigate.push(Routes.Signin.ServerError);
         }
       });
   };

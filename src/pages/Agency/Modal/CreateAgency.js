@@ -1,5 +1,6 @@
 //**React imports */
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 //**Bootsrap imports */
 import {
   Card,
@@ -20,9 +21,11 @@ import Profile3 from "../../../assets/img/team/profile-picture-3.jpg";
 //**Api config imports */
 import axios from "../../../Axios/Axios";
 import ApiLinks from "./../../../Axios/ApiLinks";
+import { Routes } from "../../../routes";
 //-----------------------------------------------------------------------------
 function CreateAgency({ showCreateAgencyModal, setShowCreateAgencyModal }) {
   //--------------------------------------------------------------
+  const navigate = useHistory();
   const [spinningButton, setSpinningButton] = useState(false);
   const [inputErrors, setInputErrors] = useState({}); //**Front errors */
   const [backErrors, setBackErrors] = useState({}); //**Back errors */
@@ -69,11 +72,11 @@ function CreateAgency({ showCreateAgencyModal, setShowCreateAgencyModal }) {
           }
           //**Token is invalide */
           if (err?.response?.status === 401) {
-            //redirect user to login page
+            navigate.push(Routes.Signin.path);
           }
           //**Server returning 404 for any reason */
           if (err?.response?.status === 404) {
-            //redirect to not found page
+            navigate.push(Routes.Signin.NotFound);
           }
           //**Some entite is missing */
           if (err?.response?.status === 406) {
@@ -92,7 +95,7 @@ function CreateAgency({ showCreateAgencyModal, setShowCreateAgencyModal }) {
           }
           //**Server error */
           if (err?.response?.status === 500) {
-            //redirect to server error page
+            navigate.push(Routes.Signin.ServerError);
           }
         });
     }
