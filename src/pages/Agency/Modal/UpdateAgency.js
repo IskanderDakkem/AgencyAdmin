@@ -93,7 +93,7 @@ function UpdateAgency({
         .put(ApiLinks.Agency.update + selectedAgency, agency, {})
         .then((res) => {
           //** means the brand was successfully created */
-          if (res.status === 201) {
+          if (res.status === 200) {
             //**Close modal */
             setShowUpdateAgencyModal(false);
             //**Empty state */
@@ -329,11 +329,7 @@ function UpdateAgency({
         >
           Annuler
         </Button>
-        <Button
-          variant="success"
-          className="text-white"
-          onClick={() => setShowUpdateAgencyModal(false)}
-        >
+        <Button variant="success" className="text-white" onClick={updateAgency}>
           {spinningButton ? (
             <Spinner animation="border" size="sm" />
           ) : (

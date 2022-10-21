@@ -238,7 +238,7 @@ function CreateSheetModal({ showCreateSheetModal, setShowCreateSheetModal }) {
                     value={newSheet?.kmAt}
                     onChange={onChangeNewSheet}
                     name="kmAt"
-                    placeholder="kilométrage min et max..."
+                    placeholder="kilométrage..."
                     required
                     isInvalid={false}
                   />

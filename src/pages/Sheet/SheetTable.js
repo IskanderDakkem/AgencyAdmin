@@ -25,7 +25,6 @@ import {
   faPlus,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-
 //**Api config imports */
 import ApiLinks from "./../../Axios/ApiLinks";
 import axios from "../../Axios/Axios";
@@ -34,6 +33,7 @@ import CreateSheetModal from "./Modal/CreateSheetModal";
 import DeleteSheetModal from "./Modal/DeleteSheetModal";
 import UpdateSheetModal from "./Modal/UpdateSheetModal";
 import ViewSheetModal from "./Modal/ViewSheetModal";
+//-----------------------------------------------------------
 function SheetTable() {
   //-----------------------------------------------------------
   const [sheets, setSheets] = useState([]);
@@ -170,6 +170,14 @@ function SheetTable() {
                   minKm,
                   maxKm,
                 } = sheet;
+                let TypeValue;
+                if (type === "1") {
+                  TypeValue = "kilométrage";
+                } else if (type === "2") {
+                  TypeValue = "Nombre de mois";
+                } else if (type === "3") {
+                  TypeValue = "kilométrage min et max";
+                }
                 let Value;
                 if (kmAt !== null) {
                   Value = <span className="fw-normal"> {kmAt + " km"} </span>;
@@ -194,7 +202,7 @@ function SheetTable() {
                       <span className="fw-normal">{avatar}</span>
                     </td>
                     <td>
-                      <span className="fw-normal">{type}</span>
+                      <span className="fw-normal">{TypeValue}</span>
                     </td>
                     <td>
                       <span className="fw-normal">{name}</span>

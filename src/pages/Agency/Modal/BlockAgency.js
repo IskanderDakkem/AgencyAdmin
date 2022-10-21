@@ -16,7 +16,11 @@ function BlockAgency({
   //-----------------------------------------------------------
   const blockThisAgency = async () => {
     setSpinningButton(true);
-    await Axios.put(ApiLinks.Agency.block + selectedAgency)
+    await Axios.put(
+      ApiLinks.Agency.block + selectedAgency.id,
+      { suspended: !selectedAgency.status },
+      {}
+    )
       .then((res) => {
         if (res?.status === 200) {
           setShowSuspendAgencyModal(false);
@@ -61,7 +65,9 @@ function BlockAgency({
         />
       </Modal.Header>
       <Modal.Body>
-        <h5 className="mb-4">Blocker cette agence ?</h5>
+        <h5 className="mb-4">
+          {selectedAgency.status ? "Unblock" : "Block"} cette agence ?
+        </h5>
       </Modal.Body>
       {backErrors.failedToCreate && (
         <Alert variant="danger">{backErrors.failedToCreate}</Alert>

@@ -52,6 +52,7 @@ import ViewAgency from "./Modal/ViewAgency";
 import transactions from "../../data/transactions";
 import BlockAgency from "./Modal/BlockAgency";
 import ResetAgencyPassword from "./Modal/ResetAgencyPassword";
+import ActivateAgencyModal from "./Modal/ActivateAgencyModal";
 function AgencyTable() {
   const totalTransactions = transactions.length;
   //--------------------------------------------------------------
@@ -125,9 +126,9 @@ function AgencyTable() {
     setShowViewAgencyModal(true);
     setSelectedAgency((prev) => id);
   };
-  const handleSuspendAgencyModal = (id) => {
+  const handleSuspendAgencyModal = (id, status) => {
     setShowSuspendAgencyModal(true);
-    setSelectedAgency((prev) => id);
+    setSelectedAgency((prev) => ({ id, status }));
   };
   const handleResetPasswordAgencyModal = (id) => {
     setShowResetPasswordModal(true);
@@ -212,10 +213,10 @@ function AgencyTable() {
                 if (suspended) {
                   status.description = "L'agence est suspendue";
                   status.class = "text-danger";
-                } else if (activated) {
-                  status.description = "Le compte n'est pas activé";
-                  status.class = "text-primary";
                 } else if (!activated) {
+                  status.description = "Le compte n'est pas activé";
+                  status.class = "text-black";
+                } else if (activated) {
                   status.description = "Le compte est activé";
                   status.class = "text-success";
                 }
@@ -291,8 +292,30 @@ function AgencyTable() {
                         <Button
                           variant="danger"
                           className="p-2 m-1"
-                          onClick={() => handleSuspendAgencyModal(id)}
+                          onClick={() =>
+                            handleSuspendAgencyModal(id, suspended)
+                          }
                           disabled={suspended}
+                        >
+                          <FontAwesomeIcon icon={faBan} className="p-0 m-0" />
+                        </Button>
+                      </OverlayTrigger>
+                      <OverlayTrigger
+                        key="example"
+                        placement="bottom"
+                        overlay={
+                          <Tooltip id="top" className="m-0">
+                            Unblocker l'agence
+                          </Tooltip>
+                        }
+                      >
+                        <Button
+                          variant="success"
+                          className="p-2 m-1"
+                          onClick={() =>
+                            handleSuspendAgencyModal(id, suspended)
+                          }
+                          disabled={!suspended}
                         >
                           <FontAwesomeIcon icon={faBan} className="p-0 m-0" />
                         </Button>
@@ -420,6 +443,11 @@ function AgencyTable() {
       <ResetAgencyPassword
         showResetPasswordModal={showResetPasswordModal}
         setShowResetPasswordModal={setShowResetPasswordModal}
+        selectedAgency={selectedAgency}
+      />
+      <ActivateAgencyModal
+        showActivateAgencyModal={showActivateAgencyModal}
+        setShowActivateAgencyModal={setShowActivateAgencyModal}
         selectedAgency={selectedAgency}
       />
     </>
