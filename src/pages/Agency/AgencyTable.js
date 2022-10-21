@@ -50,6 +50,8 @@ import UpdateAgency from "./Modal/UpdateAgency";
 import ViewAgency from "./Modal/ViewAgency";
 
 import transactions from "../../data/transactions";
+import BlockAgency from "./Modal/BlockAgency";
+import ResetAgencyPassword from "./Modal/ResetAgencyPassword";
 function AgencyTable() {
   const totalTransactions = transactions.length;
   //--------------------------------------------------------------
@@ -105,6 +107,9 @@ function AgencyTable() {
   const [showDeleteAgencyModal, setShowDeleteAgencyModal] = useState(false);
   const [showUpdateAgencyModal, setShowUpdateAgencyModal] = useState(false);
   const [showViewAgencyModal, setShowViewAgencyModal] = useState(false);
+  const [showSuspendAgencyModal, setShowSuspendAgencyModal] = useState(false);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+  const [showActivateAgencyModal, setShowActivateAgencyModal] = useState(false);
   //--------------------------------------------------------------
   const [selectedAgency, setSelectedAgency] = useState(0);
   //--------------------------------------------------------------
@@ -120,6 +125,18 @@ function AgencyTable() {
     setShowViewAgencyModal(true);
     setSelectedAgency((prev) => id);
   };
+  const handleSuspendAgencyModal = (id) => {
+    setShowSuspendAgencyModal(true);
+    setSelectedAgency((prev) => id);
+  };
+  const handleResetPasswordAgencyModal = (id) => {
+    setShowResetPasswordModal(true);
+    setSelectedAgency((prev) => id);
+  };
+  const handleActivateAgencyModal = (id) => {
+    setShowActivateAgencyModal(true);
+    setSelectedAgency((prev) => id);
+  };
   //-----------------------------------------------------------
   useEffect(() => {
     getAllAgencies();
@@ -128,6 +145,9 @@ function AgencyTable() {
     showDeleteAgencyModal,
     showUpdateAgencyModal,
     showViewAgencyModal,
+    showSuspendAgencyModal,
+    showResetPasswordModal,
+    showActivateAgencyModal,
   ]);
   //-----------------------------------------------------------
   return (
@@ -179,7 +199,26 @@ function AgencyTable() {
             </thead>
             <tbody>
               {agencies.map((agency) => {
-                const { id, logo, libelle, email, phoneNumber } = agency;
+                const {
+                  id,
+                  logo,
+                  libelle,
+                  email,
+                  phoneNumber,
+                  activated,
+                  suspended,
+                } = agency;
+                const status = {};
+                if (suspended) {
+                  status.description = "L'agence est suspendue";
+                  status.class = "text-danger";
+                } else if (activated) {
+                  status.description = "Le compte n'est pas activé";
+                  status.class = "text-primary";
+                } else if (!activated) {
+                  status.description = "Le compte est activé";
+                  status.class = "text-success";
+                }
                 return (
                   <tr key={id}>
                     <td>
@@ -198,7 +237,9 @@ function AgencyTable() {
                       <span className="fw-normal">{phoneNumber}</span>
                     </td>
                     <td>
-                      <span className="fw-normal">Status</span>
+                      <span className={`fw-normal ${status.class}`}>
+                        {status.description}
+                      </span>
                     </td>
                     <td>
                       <OverlayTrigger
@@ -250,7 +291,8 @@ function AgencyTable() {
                         <Button
                           variant="danger"
                           className="p-2 m-1"
-                          onClick={() => handleDeleteAgency(id)}
+                          onClick={() => handleSuspendAgencyModal(id)}
+                          disabled={suspended}
                         >
                           <FontAwesomeIcon icon={faBan} className="p-0 m-0" />
                         </Button>
@@ -284,7 +326,7 @@ function AgencyTable() {
                         <Button
                           variant="success"
                           className="p-2 m-1"
-                          onClick={() => handleUpdateAgency(id)}
+                          onClick={() => handleResetPasswordAgencyModal(id)}
                         >
                           <FontAwesomeIcon icon={faLock} className="p-0" />
                         </Button>
@@ -301,7 +343,7 @@ function AgencyTable() {
                         <Button
                           variant="info"
                           className="p-2 m-1"
-                          onClick={() => handleUpdateAgency(id)}
+                          onClick={() => handleActivateAgencyModal(id)}
                         >
                           <FontAwesomeIcon icon={faCheck} className="p-0" />
                         </Button>
@@ -368,6 +410,16 @@ function AgencyTable() {
       <ViewAgency
         showViewAgencyModal={showViewAgencyModal}
         setShowViewAgencyModal={setShowViewAgencyModal}
+        selectedAgency={selectedAgency}
+      />
+      <BlockAgency
+        showSuspendAgencyModal={showSuspendAgencyModal}
+        setShowSuspendAgencyModal={setShowSuspendAgencyModal}
+        selectedAgency={selectedAgency}
+      />
+      <ResetAgencyPassword
+        showResetPasswordModal={showResetPasswordModal}
+        setShowResetPasswordModal={setShowResetPasswordModal}
         selectedAgency={selectedAgency}
       />
     </>

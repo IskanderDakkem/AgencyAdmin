@@ -1,29 +1,31 @@
 //**React imports */
 import React, { useState } from "react";
 //**Bootstrap imports */
-import { Button, Modal, Alert } from "react-bootstrap";
+import { Button, Modal, Spinner, Alert } from "react-bootstrap";
 //**Api config */
-import Axios from "../../../Axios/Axios";
+import axios from "./../../../Axios/Axios";
 import ApiLinks from "./../../../Axios/ApiLinks";
-function BlockAgency({
-  showSuspendAgencyModal,
-  setShowSuspendAgencyModal,
+//---------------------------------------------------------------------------
+function ResetAgencyPassword({
+  showResetPasswordModal,
+  setShowResetPasswordModal,
   selectedAgency,
 }) {
   //-----------------------------------------------------------
   const [spinningButton, setSpinningButton] = useState(false);
   const [backErrors, setBackErrors] = useState({}); //**Back errors */
   //-----------------------------------------------------------
-  const blockThisAgency = async () => {
+  const sendResetLink = async (req, res) => {
     setSpinningButton(true);
-    await Axios.put(ApiLinks.Agency.block + selectedAgency)
+    await axios
+      .post(ApiLinks.Agency.sendResetLink + selectedAgency, {}, {})
       .then((res) => {
         if (res?.status === 200) {
-          setShowSuspendAgencyModal(false);
+          setShowResetPasswordModal(false);
         }
       })
       .catch((err) => {
-        //**Failed to block */
+        //**Failed to delete */
         if (err?.response?.status === 400) {
           setBackErrors((prev) => ({
             ...prev,
@@ -50,18 +52,21 @@ function BlockAgency({
       /* as={Modal.Dialog} */
       backdrop="static"
       centered
-      show={showSuspendAgencyModal}
-      onHide={() => setShowSuspendAgencyModal(false)}
+      show={showResetPasswordModal}
+      onHide={() => setShowResetPasswordModal(false)}
     >
       <Modal.Header className="border-0">
         <Button
           variant="close"
           aria-label="Close"
-          onClick={() => setShowSuspendAgencyModal(false)}
+          onClick={() => setShowResetPasswordModal(false)}
         />
       </Modal.Header>
       <Modal.Body>
-        <h5 className="mb-4">Blocker cette agence ?</h5>
+        <h5 className="mb-4">
+          Confirmer envoyer un lien de réinitialisation du mot de passe à
+          l'e-mail de l'agence ?
+        </h5>
       </Modal.Body>
       {backErrors.failedToCreate && (
         <Alert variant="danger">{backErrors.failedToCreate}</Alert>
@@ -70,21 +75,25 @@ function BlockAgency({
         <Button
           variant="danger"
           className="text-white ms-auto"
-          onClick={() => setShowSuspendAgencyModal(false)}
+          onClick={() => setShowResetPasswordModal(false)}
         >
           Annuler
         </Button>
         <Button
           variant="success"
           className="text-white"
-          onClick={blockThisAgency}
+          onClick={sendResetLink}
           disabled={spinningButton}
         >
-          Confirmer
+          {spinningButton ? (
+            <Spinner animation="border" size="sm" />
+          ) : (
+            "Confirmer"
+          )}
         </Button>
       </Modal.Footer>
     </Modal>
   );
 }
 
-export default BlockAgency;
+export default ResetAgencyPassword;

@@ -21,6 +21,8 @@ const ApiLinks = {
     updatePassword: "/agency/update/password", //+id
     getOne: "/agency/get/one/", //+id
     getAll: "/agency/get/all",
+    block: "/agency/update/suspend/", //+id
+    sendResetLink: "/agency/send/resetPassword/", //+id
   },
 };
 

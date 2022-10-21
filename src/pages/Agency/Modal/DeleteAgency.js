@@ -1,7 +1,10 @@
 //**React imports */
-import React from "react";
+import React, { useState } from "react";
 //**Bootstrap imports */
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Spinner, Alert } from "react-bootstrap";
+//**Api config */
+import axios from "./../../../Axios/Axios";
+import ApiLinks from "./../../../Axios/ApiLinks";
 //---------------------------------------------------------------------------
 function DeleteAgency({
   showDeleteAgencyModal,
@@ -79,7 +82,11 @@ function DeleteAgency({
           onClick={deleteThisAgency}
           disabled={spinningButton}
         >
-          Confirmer
+          {spinningButton ? (
+            <Spinner animation="border" size="sm" />
+          ) : (
+            "Confirmer"
+          )}
         </Button>
       </Modal.Footer>
     </Modal>
