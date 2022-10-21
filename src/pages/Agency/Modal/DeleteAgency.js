@@ -1,23 +1,49 @@
-import React, { useState } from "react";
-import {
-  Card,
-  Form,
-  Button,
-  Modal,
-  InputGroup,
-  FormCheck,
-  Col,
-  Image,
-} from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleLeft,
-  faEnvelope,
-  faUnlockAlt,
-  faPaperclip,
-} from "@fortawesome/free-solid-svg-icons";
-import Profile3 from "../../../assets/img/team/profile-picture-3.jpg";
-function DeleteAgency({ showDeleteAgencyModal, setShowDeleteAgencyModal }) {
+//**React imports */
+import React from "react";
+//**Bootstrap imports */
+import { Button, Modal } from "react-bootstrap";
+//---------------------------------------------------------------------------
+function DeleteAgency({
+  showDeleteAgencyModal,
+  setShowDeleteAgencyModal,
+  selectedAgency,
+}) {
+  //-----------------------------------------------------------
+  const [spinningButton, setSpinningButton] = useState(false);
+  const [backErrors, setBackErrors] = useState({}); //**Back errors */
+  //-----------------------------------------------------------
+  const deleteThisAgency = async () => {
+    setSpinningButton(true);
+    await axios
+      .delete(ApiLinks.Agency.delete + selectedAgency, {})
+      .then((res) => {
+        if (res?.status === 200) {
+          setShowDeleteAgencyModal(false);
+        }
+      })
+      .catch((err) => {
+        //**Failed to delete */
+        if (err?.response?.status === 400) {
+          setBackErrors((prev) => ({
+            ...prev,
+            failedToCreate: "une erreur s'est produite",
+          }));
+        }
+        //**Invalid token */
+        if (err?.response?.status === 401) {
+          //Redirect to login oage
+        }
+        //**404 */
+        if (err?.response?.status === 404) {
+          //redirect to not found page
+        }
+        //**server error */
+        if (err?.response?.status === 500) {
+          //redirect to server error page
+        }
+      });
+    setSpinningButton(false);
+  };
   return (
     <Modal
       /* as={Modal.Dialog} */
@@ -36,6 +62,9 @@ function DeleteAgency({ showDeleteAgencyModal, setShowDeleteAgencyModal }) {
       <Modal.Body>
         <h5 className="mb-4">Supprimer cette agence ?</h5>
       </Modal.Body>
+      {backErrors.failedToCreate && (
+        <Alert variant="danger">{backErrors.failedToCreate}</Alert>
+      )}
       <Modal.Footer>
         <Button
           variant="danger"
@@ -47,7 +76,8 @@ function DeleteAgency({ showDeleteAgencyModal, setShowDeleteAgencyModal }) {
         <Button
           variant="success"
           className="text-white"
-          onClick={() => setShowDeleteAgencyModal(false)}
+          onClick={deleteThisAgency}
+          disabled={spinningButton}
         >
           Confirmer
         </Button>

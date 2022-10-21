@@ -36,6 +36,8 @@ import {
   faCheck,
   faPlus,
   faUser,
+  faLock,
+  faBan,
 } from "@fortawesome/free-solid-svg-icons";
 //**Api config imports */
 import ApiLinks from "./../../Axios/ApiLinks";
@@ -171,6 +173,7 @@ function AgencyTable() {
                 <th className="border-bottom">Libelle</th>
                 <th className="border-bottom">Email</th>
                 <th className="border-bottom">Phone Number</th>
+                <th className="border-bottom">Status</th>
                 <th className="border-bottom">Action</th>
               </tr>
             </thead>
@@ -195,6 +198,9 @@ function AgencyTable() {
                       <span className="fw-normal">{phoneNumber}</span>
                     </td>
                     <td>
+                      <span className="fw-normal">Status</span>
+                    </td>
+                    <td>
                       <OverlayTrigger
                         key="example"
                         placement="bottom"
@@ -217,7 +223,7 @@ function AgencyTable() {
                         placement="bottom"
                         overlay={
                           <Tooltip id="top" className="m-0">
-                            Supprimer
+                            Supprimer l'agence
                           </Tooltip>
                         }
                       >
@@ -237,6 +243,23 @@ function AgencyTable() {
                         placement="bottom"
                         overlay={
                           <Tooltip id="top" className="m-0">
+                            Blocker l'agence
+                          </Tooltip>
+                        }
+                      >
+                        <Button
+                          variant="danger"
+                          className="p-2 m-1"
+                          onClick={() => handleDeleteAgency(id)}
+                        >
+                          <FontAwesomeIcon icon={faBan} className="p-0 m-0" />
+                        </Button>
+                      </OverlayTrigger>
+                      <OverlayTrigger
+                        key="example"
+                        placement="bottom"
+                        overlay={
+                          <Tooltip id="top" className="m-0">
                             Mettre à jour
                           </Tooltip>
                         }
@@ -247,6 +270,40 @@ function AgencyTable() {
                           onClick={() => handleUpdateAgency(id)}
                         >
                           <FontAwesomeIcon icon={faEdit} className="p-0" />
+                        </Button>
+                      </OverlayTrigger>
+                      <OverlayTrigger
+                        key="example"
+                        placement="bottom"
+                        overlay={
+                          <Tooltip id="top" className="m-0">
+                            Envoyer le lien de réinitialisation du mot de passe
+                          </Tooltip>
+                        }
+                      >
+                        <Button
+                          variant="success"
+                          className="p-2 m-1"
+                          onClick={() => handleUpdateAgency(id)}
+                        >
+                          <FontAwesomeIcon icon={faLock} className="p-0" />
+                        </Button>
+                      </OverlayTrigger>
+                      <OverlayTrigger
+                        key="example"
+                        placement="bottom"
+                        overlay={
+                          <Tooltip id="top" className="m-0">
+                            Activer l'abonnement
+                          </Tooltip>
+                        }
+                      >
+                        <Button
+                          variant="info"
+                          className="p-2 m-1"
+                          onClick={() => handleUpdateAgency(id)}
+                        >
+                          <FontAwesomeIcon icon={faCheck} className="p-0" />
                         </Button>
                       </OverlayTrigger>
                     </td>
