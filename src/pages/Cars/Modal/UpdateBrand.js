@@ -22,9 +22,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 //** Upload img import */
 import Profile3 from "../../../assets/img/team/profile-picture-3.jpg";
+//**Api config */
 import axios from "./../../../Axios/Axios";
 import ApiLinks from "./../../../Axios/ApiLinks";
-
+//--------------------------------------------------------------
 function UpdateBrand({ showUpdateBrand, setShowUpdateBrand, selectedBrand }) {
   //--------------------------------------------------------------
   const [spinningButton, setSpinningButton] = useState(false);

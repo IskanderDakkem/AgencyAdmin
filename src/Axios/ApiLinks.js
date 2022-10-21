@@ -16,6 +16,7 @@ const ApiLinks = {
   Agency: {
     create: "/agency/create",
     delete: "/agency/delete/", //+id
+    update: "/agency/update/all/", //+id
     updateLogo: "/agency/updte/logo/", //+id
     updatePassword: "/agency/update/password", //+id
     getOne: "/agency/get/one/", //+id
