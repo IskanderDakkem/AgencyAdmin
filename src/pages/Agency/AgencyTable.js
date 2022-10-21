@@ -1,7 +1,6 @@
 //**React imports */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Routes } from "../../routes";
 //**Bootsrap imports */
 import {
   Col,
@@ -41,6 +40,7 @@ import {
 //**Api config imports */
 import ApiLinks from "./../../Axios/ApiLinks";
 import axios from "../../Axios/Axios";
+import { Routes } from "../../routes";
 //**Modals imports */
 import CreateAgency from "./Modal/CreateAgency";
 import DeleteAgency from "./Modal/DeleteAgency";
@@ -57,7 +57,7 @@ function AgencyTable() {
   //-----------------------------------------------------------
   const getAllAgencies = async () => {
     await axios
-      .get()
+      .get(ApiLinks.Agency.getAll, {})
       .then((res) => {
         if (res?.status === 200) {
           setAgencies((prev) => res?.data?.items);
@@ -118,7 +118,16 @@ function AgencyTable() {
     setShowViewAgencyModal(true);
     setSelectedAgency((prev) => id);
   };
-  //--------------------------------------------------------------
+  //-----------------------------------------------------------
+  useEffect(() => {
+    getAllAgencies();
+  }, [
+    showCreateAgencyModal,
+    showDeleteAgencyModal,
+    showUpdateAgencyModal,
+    showViewAgencyModal,
+  ]);
+  //-----------------------------------------------------------
   return (
     <>
       <div className="table-settings mb-4">
@@ -132,31 +141,6 @@ function AgencyTable() {
             </InputGroup>
           </Col>
           <Col xs={4} md={2} xl={1} className="ps-md-0 text-end">
-            {/* <Dropdown as={ButtonGroup}>
-              <Dropdown.Toggle
-                split
-                as={Button}
-                variant="link"
-                className="text-dark m-0 p-0"
-              >
-                <span className="icon icon-sm icon-gray">
-                  <FontAwesomeIcon icon={faCog} />
-                </span>
-              </Dropdown.Toggle>
-              <Dropdown.Menu className="dropdown-menu-xs dropdown-menu-right">
-                <Dropdown.Item className="fw-bold text-dark">
-                  Show
-                </Dropdown.Item>
-                <Dropdown.Item className="d-flex fw-bold">
-                  10{" "}
-                  <span className="icon icon-small ms-auto">
-                    <FontAwesomeIcon icon={faCheck} />
-                  </span>
-                </Dropdown.Item>
-                <Dropdown.Item className="fw-bold">20</Dropdown.Item>
-                <Dropdown.Item className="fw-bold">30</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown> */}
             <OverlayTrigger
               key="example"
               placement="bottom"
@@ -191,10 +175,10 @@ function AgencyTable() {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((agency) => {
+              {agencies.map((agency) => {
                 const { id, logo, libelle, email, phoneNumber } = agency;
                 return (
-                  <tr>
+                  <tr key={id}>
                     <td>
                       <span className="fw-normal">{id}</span>
                     </td>
@@ -274,7 +258,9 @@ function AgencyTable() {
           <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
             <Nav>
               <Pagination className="mb-2 mb-lg-0">
-                <Pagination.Prev>Previous</Pagination.Prev>
+                <Pagination.Prev onClick={() => prevPage(rowPerPage)}>
+                  Previous
+                </Pagination.Prev>
                 {pagesNumber.map((pageNumber) => {
                   if (rowPerPage === pageNumber) {
                     return (
@@ -295,11 +281,15 @@ function AgencyTable() {
                     </Pagination.Item>
                   );
                 })}
-                <Pagination.Next>Next</Pagination.Next>
+                <Pagination.Next onClick={() => nextPage(rowPerPage)}>
+                  Next
+                </Pagination.Next>
               </Pagination>
             </Nav>
             <small className="fw-bold">
-              Showing <b>{totalTransactions}</b> out of <b>25</b> entries
+              Showing <b>{agencies.length}</b> out of
+              <b>{" " + agencies.length + " "}</b>
+              entries
             </small>
           </Card.Footer>
         </Card.Body>

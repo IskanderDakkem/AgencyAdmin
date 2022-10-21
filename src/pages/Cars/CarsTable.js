@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { Routes } from "../../routes";
 import { Link } from "react-router-dom";
-
 //**Bootsrap imports */
 import {
   Col,
@@ -17,7 +16,6 @@ import {
   Tooltip,
   OverlayTrigger,
 } from "@themesberg/react-bootstrap";
-
 //**Font awesome imports */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -27,11 +25,9 @@ import {
   faPlus,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-
 //**Api config imports */
 import ApiLinks from "./../../Axios/ApiLinks";
 import axios from "../../Axios/Axios";
-
 //**Modals import */
 import CreateCar from "./Modal/CreateCar"; //Create a new modal
 import ViewModels from "./Modal/ViewModels"; //View the brands models
