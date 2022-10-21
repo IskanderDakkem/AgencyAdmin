@@ -47,7 +47,6 @@ function UpdateAgency({
     await axios
       .get(ApiLinks.Agency.getOne + selectedAgency, {})
       .then((res) => {
-        console.log(res);
         if (res?.status === 200) {
           setAgency((prev) => res?.data?.item);
         }
@@ -103,7 +102,6 @@ function UpdateAgency({
           }
         })
         .catch((err) => {
-          console.log(err);
           //**Failed to create */
           if (err?.response?.status === 400) {
             setBackErrors((prev) => ({

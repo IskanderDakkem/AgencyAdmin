@@ -47,6 +47,7 @@ function CreateSheetModal({ showCreateSheetModal, setShowCreateSheetModal }) {
   //--------------------------------------------------------------
   const handleSubmitNewSheet = async (Event) => {
     Event.preventDefault();
+    setBackErrors({});
     setSpinningButton(true);
     setInputErrors((prev) => validate(newSheet));
     if (Object.keys(inputErrors).length === 0) {
@@ -64,7 +65,6 @@ function CreateSheetModal({ showCreateSheetModal, setShowCreateSheetModal }) {
           }
         })
         .catch((err) => {
-          console.log(err);
           //**Failed to create */
           if (err?.response?.status === 400) {
             setBackErrors((prev) => ({

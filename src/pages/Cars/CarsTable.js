@@ -35,6 +35,7 @@ import ViewBrand from "./Modal/ViewBrand"; //View single brand
 import DeleteBrand from "./Modal/DeleteBrand"; //Delete a brand
 import UpdateBrand from "./Modal/UpdateBrand"; //update a single brand
 import CreateBrandModel from "./Modal/CreateBrandModel"; //Create a brand model
+//-----------------------------------------------------------
 function CarsTable() {
   //-----------------------------------------------------------
   const [brands, setBrands] = useState([]);
@@ -50,7 +51,25 @@ function CarsTable() {
         }
       })
       .catch((err) => {
-        console.log(err);
+        //**Failed to create */
+        if (err?.response?.status === 400) {
+          setBackErrors((prev) => ({
+            ...prev,
+            failedToCreate: "une erreur s'est produite",
+          }));
+        }
+        //**Token is invalide */
+        if (err?.response?.status === 401) {
+          //redirect user to login page
+        }
+        //**Server returning 404 for any reason */
+        if (err?.response?.status === 404) {
+          //redirect to not found page
+        }
+        //**Server error */
+        if (err?.response?.status === 500) {
+          //redirect to server error page
+        }
       });
   };
   //-----------------------------------------------------------

@@ -7,24 +7,16 @@ import {
   Button,
   Modal,
   InputGroup,
-  FormCheck,
   Col,
   Image,
   Spinner,
 } from "react-bootstrap";
-//**Font awesome imoprts */
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleLeft,
-  faEnvelope,
-  faUnlockAlt,
-  faPaperclip,
-} from "@fortawesome/free-solid-svg-icons";
 //**Assets imports */
 import Profile3 from "../../../assets/img/team/profile-picture-3.jpg";
 //**Api config imports */
 import axios from "./../../../Axios/Axios";
 import ApiLinks from "./../../../Axios/ApiLinks";
+//----------------------------------------------------------------
 function ViewAgency({
   showViewAgencyModal,
   setShowViewAgencyModal,
@@ -41,7 +33,6 @@ function ViewAgency({
     await axios
       .get(ApiLinks.Agency.getOne + selectedAgency, {})
       .then((res) => {
-        console.log(res);
         if (res?.status === 200) {
           setAgency((prev) => res?.data?.item);
         }

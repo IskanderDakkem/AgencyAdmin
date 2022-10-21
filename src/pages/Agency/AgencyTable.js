@@ -69,7 +69,6 @@ function AgencyTable() {
         }
       })
       .catch((err) => {
-        console.log(err);
         //**Token is invalide */
         if (err?.response?.status === 401) {
           //redirect user to login page

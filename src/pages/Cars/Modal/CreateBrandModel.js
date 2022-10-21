@@ -1,28 +1,105 @@
+//**React imports */
 import React, { useState } from "react";
+//**React imports */
 import {
-  Card,
   Form,
   Button,
   Modal,
   InputGroup,
   Col,
-  Image,
+  Spinner,
+  Alert,
 } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleLeft,
-  faEnvelope,
-  faUnlockAlt,
-  faPaperclip,
-} from "@fortawesome/free-solid-svg-icons";
-import Profile3 from "../../../assets/img/team/profile-picture-3.jpg";
-function CreateBrandModel({ showCreateModel, setShowCreateModel }) {
-  const hanldeSubmitNewCar = async () => {};
+//**Api config imports */
+import axios from "./../../../Axios/Axios";
+import ApiLinks from "./../../../Axios/ApiLinks";
+//----------------------------------------------------------------
+function CreateBrandModel({
+  showCreateModel,
+  setShowCreateModel,
+  selectedBrand,
+}) {
+  //----------------------------------------------------------------
+  const [spinningButton, setSpinningButton] = useState(false);
+  const [inputErrors, setInputErrors] = useState("");
+  const [backErrors, setBackErrors] = useState({}); //**Back errors */
+  //----------------------------------------------------------------
+  const initialeState = "";
+  const [model, setModel] = useState(initialeState);
+  const onChangeNewModel = (event) => {
+    const { value } = event.target;
+    setModel((prev) => value);
+  };
+  //----------------------------------------------------------------
+  const SubmitNewBrandModel = async (event) => {
+    event.preventDefault();
+    setBackErrors({});
+    setInputErrors(validate(model));
+    setSpinningButton(true);
+    if (Object.keys(inputErrors).length === 0) {
+      await axios
+        .post(ApiLinks.Brands.createModel + selectedBrand, { name: model }, {})
+        .then((res) => {
+          if (res?.status === 201) {
+            setShowCreateModel(false);
+            setModel(initialeState);
+            setBackErrors({});
+          }
+        })
+        .catch((err) => {
+          //**Failed to create */
+          if (err?.response?.status === 400) {
+            setBackErrors((prev) => ({
+              ...prev,
+              failedToCreate: "une erreur s'est produite",
+            }));
+          }
+          //**Token is invalide */
+          if (err?.response?.status === 401) {
+            //redirect user to login page
+          }
+          //**Server returning 404 for any reason */
+          if (err?.response?.status === 404) {
+            //redirect to not found page
+          }
+          //**Some entite is missing */
+          if (err?.response?.status === 406) {
+            setBackErrors((prev) => ({
+              ...prev,
+              missingSomething:
+                "Veuillez fournir toutes les informations requises",
+            }));
+          }
+          //**Already exist */
+          if (err?.response?.status === 409) {
+            setBackErrors((prev) => ({
+              ...prev,
+              alreadyExist: "Un nom similaire existe déjà",
+            }));
+          }
+          //**Server error */
+          if (err?.response?.status === 500) {
+            //redirect to server error page
+          }
+        });
+    }
+    setSpinningButton(false);
+  };
+  const validate = (values) => {
+    let errors = "";
+    if (values.length === 0) {
+      errors = "Le nom du modèle est requis";
+    }
+    return errors;
+  };
+  //----------------------------------------------------------------
   return (
     <Modal
+      backdrop="static"
       centered
       show={showCreateModel}
       onHide={() => setShowCreateModel(false)}
+      animation
     >
       <Modal.Header className="border-0">
         <Button
@@ -34,25 +111,34 @@ function CreateBrandModel({ showCreateModel, setShowCreateModel }) {
       <Modal.Body>
         <h5 className="mb-4">Créer une marque</h5>
         <Form>
-          <Col /* md={6} */ className="mb-3">
+          <Col className="mb-3">
             <Form.Group>
               <Form.Label>Nom</Form.Label>
               <InputGroup>
-                <InputGroup.Text>
-                  <FontAwesomeIcon icon={faEnvelope} />
-                </InputGroup.Text>
                 <Form.Control
                   type="text"
-                  placeholder="Nom de marque..."
-                  required /* isInvalid */
+                  placeholder="Nom de modéle..."
+                  value={model?.name}
+                  onChange={onChangeNewModel}
+                  required
+                  isInvalid={inputErrors.length > 0 ? true : false}
                 />
-                {/* <Form.Control.Feedback type="invalid">
-                  Please choose a username.
-                </Form.Control.Feedback> */}
               </InputGroup>
+              <Form.Control.Feedback type="invalid">
+                {inputErrors}
+              </Form.Control.Feedback>
             </Form.Group>
           </Col>
         </Form>
+        {backErrors.failedToCreate && (
+          <Alert variant="danger">{backErrors.failedToCreate}</Alert>
+        )}
+        {backErrors.missingSomething && (
+          <Alert variant="danger">{backErrors.missingSomething}</Alert>
+        )}
+        {backErrors.alreadyExist && (
+          <Alert variant="danger">{backErrors.alreadyExist}</Alert>
+        )}
       </Modal.Body>
       <Modal.Footer>
         <Button
@@ -65,9 +151,9 @@ function CreateBrandModel({ showCreateModel, setShowCreateModel }) {
         <Button
           variant="success"
           className="text-white"
-          onClick={hanldeSubmitNewCar}
+          onClick={SubmitNewBrandModel}
         >
-          Créer
+          {spinningButton ? <Spinner animation="border" size="sm" /> : "Créer"}
         </Button>
       </Modal.Footer>
     </Modal>

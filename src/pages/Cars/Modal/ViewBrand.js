@@ -30,13 +30,30 @@ function ViewBrand({ showViewBrand, setShowViewBrand, selectedBrand }) {
     await axios
       .get(ApiLinks.Brands.getOne + selectedBrand, {})
       .then((res) => {
-        console.log(res);
         if (res?.status === 200) {
           setBrand((prev) => res?.data);
         }
       })
       .catch((err) => {
-        console.log(err);
+        //**Failed to create */
+        if (err?.response?.status === 400) {
+          setBackErrors((prev) => ({
+            ...prev,
+            failedToCreate: "une erreur s'est produite",
+          }));
+        }
+        //**Token is invalide */
+        if (err?.response?.status === 401) {
+          //redirect user to login page
+        }
+        //**Server returning 404 for any reason */
+        if (err?.response?.status === 404) {
+          //redirect to not found page
+        }
+        //**Server error */
+        if (err?.response?.status === 500) {
+          //redirect to server error page
+        }
       });
   };
   useEffect(() => {

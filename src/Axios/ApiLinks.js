@@ -1,10 +1,12 @@
 const ApiLinks = {
   Brands: {
     getAll: "/brand/get/all",
+    getModels: "/brand/get/models/", //**+id */
     getOne: "/brand/get/one/", //** +id */
     update: "/brand/update/", //** +id */
     create: "/brand/create", //** +id */
     delete: "/brand/delete/", //**+id */
+    createModel: "/model/create/", //**+id */
   },
   Sheet: {
     getAll: "/sheet/get/all",

@@ -49,7 +49,6 @@ function UpdateSheetModal({
     await axios
       .get(ApiLinks.Sheet.getOne + selectedSheet, {})
       .then((res) => {
-        console.log(res);
         if (res?.status === 200) {
           setSheet((prev) => res?.data?.item);
         }

@@ -60,7 +60,6 @@ function CreateAgency({ showCreateAgencyModal, setShowCreateAgencyModal }) {
           }
         })
         .catch((err) => {
-          console.log(err);
           //**Failed to create */
           if (err?.response?.status === 400) {
             setBackErrors((prev) => ({
