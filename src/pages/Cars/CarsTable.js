@@ -38,6 +38,7 @@ import CreateBrandModel from "./Modal/CreateBrandModel"; //Create a brand model
 //-----------------------------------------------------------
 function CarsTable() {
   //-----------------------------------------------------------
+
   const [brands, setBrands] = useState([]);
   const [rowPerPage, setRowPerPage] = useState(1);
   const [limitPerPage, setLimitPerPage] = useState(30);
@@ -51,13 +52,6 @@ function CarsTable() {
         }
       })
       .catch((err) => {
-        //**Failed to create */
-        if (err?.response?.status === 400) {
-          setBackErrors((prev) => ({
-            ...prev,
-            failedToCreate: "une erreur s'est produite",
-          }));
-        }
         //**Token is invalide */
         if (err?.response?.status === 401) {
           //redirect user to login page

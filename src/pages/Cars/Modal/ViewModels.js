@@ -11,23 +11,19 @@ import ApiLinks from "./../../../Axios/ApiLinks";
 function ViewModels({ showViewCar, setShowViewCar, selectedBrand }) {
   //-----------------------------------------------------------------
   const initialeState = [];
+  const [backErrors, setBackErrors] = useState({});
+  //-----------------------------------------------------------------
   const [models, setModels] = useState(initialeState);
   const getModels = async () => {
     await axios
-      .get(ApiLinks.Brands.getModels, {})
+      .get(ApiLinks.Brands.getModels + selectedBrand, {})
       .then((res) => {
+        console.log(res);
         if (res?.status === 200) {
           setModels((prev) => res?.data?.items);
         }
       })
       .catch((err) => {
-        //**Failed to create */
-        if (err?.response?.status === 400) {
-          setBackErrors((prev) => ({
-            ...prev,
-            failedToCreate: "une erreur s'est produite",
-          }));
-        }
         //**Token is invalide */
         if (err?.response?.status === 401) {
           //redirect user to login page
@@ -50,10 +46,26 @@ function ViewModels({ showViewCar, setShowViewCar, selectedBrand }) {
     ) {
       getModels();
     }
-  }, [showViewCar, selectedBrand]);
+  }, [showViewCar, selectedBrand, window.opener]);
   //-----------------------------------------------------------------
-  const handleDeleteModel = async (id) => {};
-  const handleUpdateModel = async (id, event) => {};
+  const handleDeleteModel = async (id) => {
+    const confirmation = window.confirm("Confirmez la suppression ?");
+    if (confirmation) {
+      await axios
+        .delete(ApiLinks.Brands.deleteModal + id)
+        .then((res) => {
+          if (res?.status === 200) {
+            window.alert("Le modèle a été supprimé");
+            getModels();
+          }
+        })
+        .catch((err) => {
+          if (err?.response?.status === 400) {
+          }
+        });
+    }
+  };
+  const handleUpdateModel = async (id) => {};
   //-----------------------------------------------------------------
   return (
     <Modal
@@ -81,54 +93,58 @@ function ViewModels({ showViewCar, setShowViewCar, selectedBrand }) {
               <th className="border-bottom">Action</th>
             </tr>
           </thead>
+
+          <tbody>
+            {models.map((model) => {
+              const { id, name } = model;
+              return (
+                <tr>
+                  <td>{id}</td>
+                  <td>{name}</td>
+                  <td>
+                    <OverlayTrigger
+                      key="example"
+                      placement="bottom"
+                      overlay={
+                        <Tooltip id="top" className="m-0">
+                          Supprimer cette modéle
+                        </Tooltip>
+                      }
+                    >
+                      <Button
+                        variant="danger"
+                        className="p-2 m-1"
+                        onClick={() => handleDeleteModel(id)}
+                      >
+                        <FontAwesomeIcon
+                          icon={faTrashAlt}
+                          className="p-0 m-0"
+                        />
+                      </Button>
+                    </OverlayTrigger>
+                    <OverlayTrigger
+                      key="example"
+                      placement="bottom"
+                      overlay={
+                        <Tooltip id="top" className="m-0">
+                          Mettre à jour cette modéle
+                        </Tooltip>
+                      }
+                    >
+                      <Button
+                        variant="success"
+                        className="p-2 m-1"
+                        onClick={(e) => handleUpdateModel(id, e)}
+                      >
+                        <FontAwesomeIcon icon={faEdit} className="p-0" />
+                      </Button>
+                    </OverlayTrigger>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
         </Table>
-        <tbody>
-          {models.map((model) => {
-            const { id, name } = model;
-            return (
-              <tr>
-                <td>{id}</td>
-                <td>{name}</td>
-                <td>
-                  <OverlayTrigger
-                    key="example"
-                    placement="bottom"
-                    overlay={
-                      <Tooltip id="top" className="m-0">
-                        Supprimer cette modéle
-                      </Tooltip>
-                    }
-                  >
-                    <Button
-                      variant="danger"
-                      className="p-2 m-1"
-                      onClick={() => handleDeleteModel(id)}
-                    >
-                      <FontAwesomeIcon icon={faTrashAlt} className="p-0 m-0" />
-                    </Button>
-                  </OverlayTrigger>
-                  <OverlayTrigger
-                    key="example"
-                    placement="bottom"
-                    overlay={
-                      <Tooltip id="top" className="m-0">
-                        Mettre à jour cette modéle
-                      </Tooltip>
-                    }
-                  >
-                    <Button
-                      variant="success"
-                      className="p-2 m-1"
-                      onClick={(e) => handleUpdateModel(id, e)}
-                    >
-                      <FontAwesomeIcon icon={faEdit} className="p-0" />
-                    </Button>
-                  </OverlayTrigger>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
       </Modal.Body>
     </Modal>
   );

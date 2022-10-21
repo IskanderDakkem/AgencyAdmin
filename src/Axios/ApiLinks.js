@@ -7,6 +7,7 @@ const ApiLinks = {
     create: "/brand/create", //** +id */
     delete: "/brand/delete/", //**+id */
     createModel: "/model/create/", //**+id */
+    deleteModal: "/model/delete/", //+id
   },
   Sheet: {
     getAll: "/sheet/get/all",
